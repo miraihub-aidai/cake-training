@@ -5,11 +5,8 @@ namespace App\Controller\Api;
 
 use App\Controller\AppController;
 use App\Domain\UseCase\GetCustomer;
-use Cake\Core\Configure;
-use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
-use Cake\View\Exception\MissingTemplateException;
+use Exception;
 
 /**
  * Static content controller
@@ -25,11 +22,21 @@ class CustomerController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index(GetCustomer $getCustomer)
+    public function index(GetCustomer $getCustomer): Response
     {
-        $result = $getCustomer();
-        // $this->set('result', $result);
-        return $this->response->withStringBody($result);
+        try {
+            $customers = $getCustomer();
+            
+            return $this->response
+                ->withType('application/json')
+                ->withStringBody(json_encode($customers))
+                ->withStatus(200);
+        } catch (Exception $e) {
+            return $this->response
+                ->withType('application/json')
+                ->withStringBody(json_encode(['error' => $e->getMessage()]))
+                ->withStatus(500);
+        }
     }
 
     /**

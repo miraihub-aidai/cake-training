@@ -15,8 +15,8 @@ services:
       - ./cakephp:/var/www/html
     environment:
       - USER=cakephp_user
-    #command: ["/bin/bash", "-c", "groupadd -g ${HOST_GID} cakephp_group && useradd -u ${HOST_UID} -g ${HOST_GID} -m ${DOCKER_USER:-cakephp_user} && chown -R ${DOCKER_USER:-cakephp_user}:cakephp_group /var/www/html && su ${DOCKER_USER:-cakephp_user} -c '/usr/local/bin/docker-php-entrypoint apache2-foreground'"]
-    #command: ["/bin/bash", "-c", "chown -R ${DOCKER_USER:-cakephp_user}:cakephp_group /var/www/html && su ${DOCKER_USER:-cakephp_user} -c '/usr/local/bin/docker-php-entrypoint apache2-foreground'"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   db:
     build:
       context: .

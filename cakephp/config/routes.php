@@ -62,8 +62,9 @@ return function (RouteBuilder $routes): void {
          */
         $builder->connect('/pages/*', 'Pages::display');
 
-        // 
+        // API Routing
         $builder->prefix('api', function (RouteBuilder $builder) {
+            $builder->setExtensions(['json']);
             $builder->connect('/', ['controller' => 'Customer', 'action' => 'index']);
             $builder->fallbacks();
         });
