@@ -5,8 +5,22 @@ namespace App\Error;
 
 use ExampleLibraryCustomer\ApiException;
 
+/**
+ * ErrorResolver
+ *
+ * This class is responsible for resolving thrown exceptions into appropriate custom error types.
+ */
 class ErrorResolver
 {
+    /**
+     * Resolve a thrown exception into a custom error type
+     *
+     * This method takes a Throwable and converts it into an appropriate CustomErrorInterface instance
+     * based on the exception type and properties.
+     *
+     * @param \Throwable $e The exception to resolve
+     * @return CustomErrorInterface The resolved custom error
+     */
     public function resolveError(\Throwable $e): CustomErrorInterface
     {
         if ($e instanceof ApiException) {

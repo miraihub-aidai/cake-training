@@ -9,11 +9,28 @@ use ExampleLibraryCustomer\Api\DefaultApi;
 use ExampleLibraryCustomer\Configuration;
 use GuzzleHttp\Client;
 
+/**
+ * CustomerService
+ * 
+ * This service implements the CustomerInterface and handles customer-related operations.
+ */
 class CustomerService implements CustomerInterface
 {
+    /**
+     * @var DefaultApi The API instance for customer operations
+     */
     private DefaultApi $apiInstance;
+
+    /**
+     * @var ErrorResolver The error resolver for handling exceptions
+     */
     private ErrorResolver $errorResolver;
 
+    /**
+     * Constructor
+     *
+     * @param ErrorResolver $errorResolver The error resolver instance
+     */
     public function __construct(ErrorResolver $errorResolver)
     {
         $config = new Configuration();
@@ -30,6 +47,14 @@ class CustomerService implements CustomerInterface
         $this->errorResolver = $errorResolver;
     }
 
+    /**
+     * Get customers
+     *
+     * Retrieves a list of customers from the API and formats the data.
+     *
+     * @return array An array of formatted customer data
+     * @throws \App\Error\CustomApiException When an error occurs during the API call
+     */
     public function get(): array
     {
         try {

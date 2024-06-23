@@ -14,18 +14,19 @@ use App\Error\UnauthorizedException;
 use Cake\Http\Response;
 
 /**
- * Static content controller
- *
- * This controller will render views from templates/Pages/
- *
- * @link https://book.cakephp.org/4/en/controllers/pages-controller.html
+ * CustomerController
+ * 
+ * This controller handles API requests related to customers.
  */
 class CustomerController extends AppController
 {
     /**
      * Index method
+     * 
+     * Retrieves a list of customers.
      *
-     * @return \Cake\Http\Response|null|void Renders view
+     * @param GetCustomer $getCustomer The use case for retrieving customers
+     * @return Response The JSON response containing customer data or error information
      */
     public function index(GetCustomer $getCustomer): Response
     {
@@ -51,6 +52,13 @@ class CustomerController extends AppController
         }
     }
 
+    /**
+     * Generate an error response
+     *
+     * @param CustomApiException $e The exception that was caught
+     * @param int $statusCode The HTTP status code to return
+     * @return Response The JSON response containing error information
+     */
     private function errorResponse(CustomApiException $e, int $statusCode): Response
     {
         return $this->response
@@ -65,42 +73,46 @@ class CustomerController extends AppController
     /**
      * View method
      *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null|void Renders view
+     * @param string|null $id Customer id.
+     * @return Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
+        // Implementation to be added
     }
 
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+     * @return Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
+        // Implementation to be added
     }
 
     /**
      * Edit method
      *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
+     * @param string|null $id Customer id.
+     * @return Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {
+        // Implementation to be added
     }
 
     /**
      * Delete method
      *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null Redirects to index.
+     * @param string|null $id Customer id.
+     * @return Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
+        // Implementation to be added
     }
 }
