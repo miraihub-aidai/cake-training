@@ -7,8 +7,18 @@ use App\Error\CustomErrorInterface;
 use App\Error\GenericError;
 use Cake\TestSuite\TestCase;
 
+/**
+ * GenericErrorTest クラス
+ *
+ * GenericError クラスのテストケースを含むクラス
+ */
 class GenericErrorTest extends TestCase
 {
+    /**
+     * コンストラクタとゲッターメソッドのテスト
+     *
+     * @return void
+     */
     public function testConstructorAndGetters(): void
     {
         $code = 500;
@@ -23,6 +33,11 @@ class GenericErrorTest extends TestCase
         $this->assertSame($details, $error->getErrorDetails());
     }
 
+    /**
+     * 詳細情報なしでのコンストラクタのテスト
+     *
+     * @return void
+     */
     public function testConstructorWithoutDetails(): void
     {
         $code = 404;
@@ -35,6 +50,11 @@ class GenericErrorTest extends TestCase
         $this->assertNull($error->getErrorDetails());
     }
 
+    /**
+     * 詳細情報がnullの場合のコンストラクタのテスト
+     *
+     * @return void
+     */
     public function testConstructorWithNullDetails(): void
     {
         $code = 400;
@@ -47,6 +67,11 @@ class GenericErrorTest extends TestCase
         $this->assertNull($error->getErrorDetails());
     }
 
+    /**
+     * 詳細情報が空の配列の場合のコンストラクタのテスト
+     *
+     * @return void
+     */
     public function testConstructorWithEmptyDetails(): void
     {
         $code = 403;
@@ -60,6 +85,11 @@ class GenericErrorTest extends TestCase
         $this->assertSame($details, $error->getErrorDetails());
     }
 
+    /**
+     * 様々なエラーコードのテスト
+     *
+     * @return void
+     */
     public function testDifferentErrorCodes(): void
     {
         $codes = [400, 401, 403, 404, 405, 406, 409, 415, 422, 429, 500, 501, 503];
@@ -70,6 +100,11 @@ class GenericErrorTest extends TestCase
         }
     }
 
+    /**
+     * 長いエラーメッセージのテスト
+     *
+     * @return void
+     */
     public function testLongErrorMessage(): void
     {
         $longMessage = str_repeat('a', 1000);
@@ -78,6 +113,11 @@ class GenericErrorTest extends TestCase
         $this->assertSame($longMessage, $error->getErrorMessage());
     }
 
+    /**
+     * 複雑な詳細情報を持つエラーのテスト
+     *
+     * @return void
+     */
     public function testComplexErrorDetails(): void
     {
         $complexDetails = [

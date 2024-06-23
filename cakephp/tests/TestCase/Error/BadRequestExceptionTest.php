@@ -8,8 +8,16 @@ use App\Error\CustomApiException;
 use Cake\TestSuite\TestCase;
 use Exception;
 
+/**
+ * BadRequestExceptionTest class
+ */
 class BadRequestExceptionTest extends TestCase
 {
+    /**
+     * BadRequestException のデフォルトのコンストラクターをテスト
+     *
+     * @return void
+     */
     public function testDefaultConstructor(): void
     {
         $exception = new BadRequestException();
@@ -19,6 +27,11 @@ class BadRequestExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージを使用して BadRequestException をテスト
+     *
+     * @return void
+     */
     public function testCustomMessage(): void
     {
         $customMessage = 'Invalid input data';
@@ -29,6 +42,11 @@ class BadRequestExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージと詳細を使用して BadRequestException をテスト
+     *
+     * @return void
+     */
     public function testCustomMessageAndDetails(): void
     {
         $customMessage = 'Missing required fields';
@@ -40,6 +58,11 @@ class BadRequestExceptionTest extends TestCase
         $this->assertSame($customDetails, $exception->getErrorDetails());
     }
 
+    /**
+     * BadRequestException が正しい親クラスを拡張するかどうかをテスト
+     *
+     * @return void
+     */
     public function testExceptionInheritance(): void
     {
         $exception = new BadRequestException();
@@ -48,6 +71,11 @@ class BadRequestExceptionTest extends TestCase
         $this->assertInstanceOf(CustomApiException::class, $exception);
     }
 
+    /**
+     * BadRequestException のエラー コードが常に 400 であるかどうかをテスト
+     *
+     * @return void
+     */
     public function testCodeIsAlways400(): void
     {
         $exception1 = new BadRequestException();

@@ -7,8 +7,14 @@ use App\Error\ApiError;
 use App\Error\CustomErrorInterface;
 use Cake\TestSuite\TestCase;
 
+/**
+ * ApiErrorTest class
+ */
 class ApiErrorTest extends TestCase
 {
+    /**
+     * ApiError のコンストラクターとゲッターをテスト
+     */
     public function testConstructorAndGetters(): void
     {
         $code = 404;
@@ -22,6 +28,9 @@ class ApiErrorTest extends TestCase
         $this->assertSame($details, $apiError->getErrorDetails());
     }
 
+    /**
+     * 詳細を指定せずにコンストラクターをテスト
+     */
     public function testConstructorWithoutDetails(): void
     {
         $code = 400;
@@ -34,6 +43,9 @@ class ApiErrorTest extends TestCase
         $this->assertNull($apiError->getErrorDetails());
     }
 
+    /**
+     * ApiError が CustomErrorInterface を実装しているかどうかをテスト
+     */
     public function testImplementsCustomErrorInterface(): void
     {
         $apiError = new ApiError(500, 'Internal Server Error');
@@ -41,6 +53,9 @@ class ApiErrorTest extends TestCase
         $this->assertInstanceOf(CustomErrorInterface::class, $apiError);
     }
 
+    /**
+     * 空の詳細を使用してコンストラクターをテスト
+     */
     public function testConstructorWithEmptyDetails(): void
     {
         $code = 403;
@@ -54,6 +69,9 @@ class ApiErrorTest extends TestCase
         $this->assertSame($details, $apiError->getErrorDetails());
     }
 
+    /**
+     * 詳細が null のコンストラクターをテスト
+     */
     public function testConstructorWithNullDetails(): void
     {
         $code = 401;

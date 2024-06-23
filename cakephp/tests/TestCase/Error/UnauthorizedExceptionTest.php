@@ -8,8 +8,18 @@ use App\Error\UnauthorizedException;
 use Cake\TestSuite\TestCase;
 use Exception;
 
+/**
+ * UnauthorizedExceptionTest クラス
+ *
+ * UnauthorizedException クラスのテストケースを含むクラス
+ */
 class UnauthorizedExceptionTest extends TestCase
 {
+    /**
+     * デフォルトコンストラクタのテスト
+     *
+     * @return void
+     */
     public function testDefaultConstructor(): void
     {
         $exception = new UnauthorizedException();
@@ -20,6 +30,11 @@ class UnauthorizedExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージのテスト
+     *
+     * @return void
+     */
     public function testCustomMessage(): void
     {
         $customMessage = 'Authentication required';
@@ -30,6 +45,11 @@ class UnauthorizedExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージと詳細情報のテスト
+     *
+     * @return void
+     */
     public function testCustomMessageAndDetails(): void
     {
         $customMessage = 'Invalid credentials';
@@ -41,6 +61,11 @@ class UnauthorizedExceptionTest extends TestCase
         $this->assertSame($customDetails, $exception->getErrorDetails());
     }
 
+    /**
+     * エラーコードの取得テスト
+     *
+     * @return void
+     */
     public function testGetErrorCode(): void
     {
         $exception = new UnauthorizedException();
@@ -48,6 +73,11 @@ class UnauthorizedExceptionTest extends TestCase
         $this->assertSame(401, $exception->getErrorCode());
     }
 
+    /**
+     * エラーメッセージの取得テスト
+     *
+     * @return void
+     */
     public function testGetErrorMessage(): void
     {
         $customMessage = 'Custom unauthorized message';
@@ -56,6 +86,11 @@ class UnauthorizedExceptionTest extends TestCase
         $this->assertSame($customMessage, $exception->getErrorMessage());
     }
 
+    /**
+     * エラー詳細の取得テスト
+     *
+     * @return void
+     */
     public function testGetErrorDetails(): void
     {
         $customDetails = ['required_scopes' => ['read', 'write'], 'provided_scopes' => ['read']];
@@ -64,6 +99,11 @@ class UnauthorizedExceptionTest extends TestCase
         $this->assertSame($customDetails, $exception->getErrorDetails());
     }
 
+    /**
+     * 例外の継承関係のテスト
+     *
+     * @return void
+     */
     public function testExceptionInheritance(): void
     {
         $exception = new UnauthorizedException();
@@ -72,6 +112,11 @@ class UnauthorizedExceptionTest extends TestCase
         $this->assertInstanceOf(CustomApiException::class, $exception);
     }
 
+    /**
+     * 空の詳細情報のテスト
+     *
+     * @return void
+     */
     public function testEmptyDetails(): void
     {
         $exception = new UnauthorizedException('Unauthorized', []);
@@ -79,6 +124,13 @@ class UnauthorizedExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * 長いエラーメッセージのテスト
+     *
+     * このテストでは、1000文字の長いメッセージが正しく処理されることを確認
+     *
+     * @return void
+     */
     public function testLongErrorMessage(): void
     {
         $longMessage = str_repeat('a', 1000);

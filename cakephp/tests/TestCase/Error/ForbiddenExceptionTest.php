@@ -7,8 +7,21 @@ use App\Error\CustomApiException;
 use App\Error\ForbiddenException;
 use Cake\TestSuite\TestCase;
 
+/**
+ * ForbiddenExceptionTest クラス
+ *
+ * このテストクラスは ForbiddenException の機能を検証する
+ * それぞれのテストは、例外が適切に初期化され、期待される属性を持つかを確認
+ */
 class ForbiddenExceptionTest extends TestCase
 {
+    /**
+     * デフォルトコンストラクタのテスト
+     *
+     * ForbiddenException がデフォルト値で正しく初期化されるかを確認
+     *
+     * @return void
+     */
     public function testDefaultConstructor(): void
     {
         $exception = new ForbiddenException();
@@ -19,6 +32,13 @@ class ForbiddenExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージでの例外のテスト
+     *
+     * カスタムメッセージを持つ ForbiddenException が正しく機能するかを検証
+     *
+     * @return void
+     */
     public function testCustomMessage(): void
     {
         $customMessage = 'Access denied';
@@ -29,6 +49,13 @@ class ForbiddenExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージと詳細情報を持つ例外のテスト
+     *
+     * メッセージと詳細情報をカスタマイズした ForbiddenException の挙動を確認
+     *
+     * @return void
+     */
     public function testCustomMessageAndDetails(): void
     {
         $customMessage = 'Insufficient permissions';
@@ -40,6 +67,13 @@ class ForbiddenExceptionTest extends TestCase
         $this->assertSame($customDetails, $exception->getErrorDetails());
     }
 
+    /**
+     * エラーコードの取得テスト
+     *
+     * ForbiddenException が適切なエラーコードを返すかを検証
+     *
+     * @return void
+     */
     public function testGetErrorCode(): void
     {
         $exception = new ForbiddenException();
@@ -47,6 +81,13 @@ class ForbiddenExceptionTest extends TestCase
         $this->assertSame(403, $exception->getErrorCode());
     }
 
+    /**
+     * エラーメッセージの取得テスト
+     *
+     * カスタムメッセージを持つ ForbiddenException が正しいメッセージを返すかを確認
+     *
+     * @return void
+     */
     public function testGetErrorMessage(): void
     {
         $customMessage = 'Custom forbidden message';
@@ -55,6 +96,13 @@ class ForbiddenExceptionTest extends TestCase
         $this->assertSame($customMessage, $exception->getErrorMessage());
     }
 
+    /**
+     * エラー詳細情報の取得テスト
+     *
+     * 詳細情報を持つ ForbiddenException がそれを正しく返すかを検証
+     *
+     * @return void
+     */
     public function testGetErrorDetails(): void
     {
         $customDetails = ['reason' => 'Insufficient permissions', 'resource' => 'admin_panel'];

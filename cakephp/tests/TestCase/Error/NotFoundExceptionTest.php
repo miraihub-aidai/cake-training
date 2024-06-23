@@ -8,8 +8,18 @@ use App\Error\NotFoundException;
 use Cake\TestSuite\TestCase;
 use Exception;
 
+/**
+ * NotFoundExceptionTest クラス
+ *
+ * このクラスは NotFoundException クラスの機能をテスト
+ */
 class NotFoundExceptionTest extends TestCase
 {
+    /**
+     * デフォルトコンストラクタのテスト
+     *
+     * @return void
+     */
     public function testDefaultConstructor(): void
     {
         $exception = new NotFoundException();
@@ -20,6 +30,11 @@ class NotFoundExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージを使用した場合のテスト
+     *
+     * @return void
+     */
     public function testCustomMessage(): void
     {
         $customMessage = 'Resource not found';
@@ -30,6 +45,11 @@ class NotFoundExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージと詳細情報を使用した場合のテスト
+     *
+     * @return void
+     */
     public function testCustomMessageAndDetails(): void
     {
         $customMessage = 'User not found';
@@ -41,6 +61,11 @@ class NotFoundExceptionTest extends TestCase
         $this->assertSame($customDetails, $exception->getErrorDetails());
     }
 
+    /**
+     * エラーコードの取得をテスト
+     *
+     * @return void
+     */
     public function testGetErrorCode(): void
     {
         $exception = new NotFoundException();
@@ -48,6 +73,11 @@ class NotFoundExceptionTest extends TestCase
         $this->assertSame(404, $exception->getErrorCode());
     }
 
+    /**
+     * エラーメッセージの取得をテスト
+     *
+     * @return void
+     */
     public function testGetErrorMessage(): void
     {
         $customMessage = 'Custom not found message';
@@ -56,6 +86,11 @@ class NotFoundExceptionTest extends TestCase
         $this->assertSame($customMessage, $exception->getErrorMessage());
     }
 
+    /**
+     * エラー詳細の取得をテスト
+     *
+     * @return void
+     */
     public function testGetErrorDetails(): void
     {
         $customDetails = ['resource' => 'product', 'id' => 456];
@@ -64,6 +99,13 @@ class NotFoundExceptionTest extends TestCase
         $this->assertSame($customDetails, $exception->getErrorDetails());
     }
 
+    /**
+     * 例外の継承関係をテスト
+     *
+     * NotFoundExceptionが適切なクラスを継承していることを確認
+     *
+     * @return void
+     */
     public function testExceptionInheritance(): void
     {
         $exception = new NotFoundException();

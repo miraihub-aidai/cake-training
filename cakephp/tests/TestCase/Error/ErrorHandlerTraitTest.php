@@ -10,16 +10,37 @@ use Cake\TestSuite\TestCase;
 use ExampleLibraryCustomer\ApiException;
 use Exception;
 
+/**
+ * ErrorHandlerTraitTest クラス
+ *
+ * このクラスは ErrorHandlerTrait の振る舞いをテストするためのものです。
+ */
 class ErrorHandlerTraitTest extends TestCase
 {
+    /**
+     * @var ErrorHandlerTraitTestClass エラーハンドラーのテスト用クラスのインスタンス
+     */
     private ErrorHandlerTraitTestClass $errorHandler;
 
+    /**
+     * テストの設定を行います。
+     * ErrorHandlerTraitTestClass のインスタンスを初期化します。
+     *
+     * @return void
+     */
     protected function setUp(): void
     {
         parent::setUp();
         $this->errorHandler = new ErrorHandlerTraitTestClass();
     }
 
+    /**
+     * ApiException を処理するテスト。
+     *
+     * APIエラーを処理して適切な ApiError インスタンスが生成されるかを検証します。
+     *
+     * @return void
+     */
     public function testHandleApiException(): void
     {
         $responseBody = ['error' => 'Bad Request'];
@@ -34,6 +55,13 @@ class ErrorHandlerTraitTest extends TestCase
         $this->assertSame($responseBody, $result->getErrorDetails());
     }
 
+    /**
+     * 一般的な例外を処理するテスト。
+     *
+     * 予期せぬ例外が GenericError として適切に処理されるかを確認します。
+     *
+     * @return void
+     */
     public function testHandleGenericException(): void
     {
         $exception = new Exception('Unexpected Error', 0);
@@ -47,6 +75,13 @@ class ErrorHandlerTraitTest extends TestCase
         $this->assertSame(['details' => 'Unexpected Error'], $result->getErrorDetails());
     }
 
+    /**
+     * カスタムコードを持つ例外を処理するテスト。
+     *
+     * カスタムエラーコードを持つ例外が適切に GenericError として処理されるかを検証します。
+     *
+     * @return void
+     */
     public function testHandleExceptionWithCustomCode(): void
     {
         $exception = new Exception('Custom Error', 503);

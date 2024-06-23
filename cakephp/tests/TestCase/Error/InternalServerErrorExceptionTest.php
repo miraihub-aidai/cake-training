@@ -8,8 +8,18 @@ use App\Error\InternalServerErrorException;
 use Cake\TestSuite\TestCase;
 use Exception;
 
+/**
+ * InternalServerErrorExceptionTest クラス
+ *
+ * InternalServerErrorException クラスのテストを行うためのテストケースクラス
+ */
 class InternalServerErrorExceptionTest extends TestCase
 {
+    /**
+     * デフォルトコンストラクタのテスト
+     *
+     * @return void
+     */
     public function testDefaultConstructor(): void
     {
         $exception = new InternalServerErrorException();
@@ -19,6 +29,11 @@ class InternalServerErrorExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージを使用した場合のテスト
+     *
+     * @return void
+     */
     public function testCustomMessage(): void
     {
         $customMessage = 'Custom Internal Server Error';
@@ -29,6 +44,11 @@ class InternalServerErrorExceptionTest extends TestCase
         $this->assertSame([], $exception->getErrorDetails());
     }
 
+    /**
+     * カスタムメッセージと詳細情報を使用した場合のテスト
+     *
+     * @return void
+     */
     public function testCustomMessageAndDetails(): void
     {
         $customMessage = 'Custom Internal Server Error';
@@ -40,6 +60,13 @@ class InternalServerErrorExceptionTest extends TestCase
         $this->assertSame($customDetails, $exception->getErrorDetails());
     }
 
+    /**
+     * 例外の継承関係をテスト
+     *
+     * InternalServerErrorException が適切なクラスを継承しているかを確認します
+     *
+     * @return void
+     */
     public function testExceptionInheritance(): void
     {
         $exception = new InternalServerErrorException();
