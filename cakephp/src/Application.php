@@ -107,7 +107,7 @@ class Application extends BaseApplication
      */
     public function services(ContainerInterface $container): void
     {
-        // CustomerServiceProviderを追加
+        // Add ServiceProvider
         $container->addServiceProvider(new CustomerServiceProvider());
     }
 }

@@ -27,9 +27,9 @@ class CustomerController extends AppController
      */
     public function index(GetCustomer $getCustomer)
     {
-        $result = $getCustomer->execute();
-        echo $result;
-        die();
+        $result = $getCustomer();
+        // $this->set('result', $result);
+        return $this->response->withStringBody($result);
     }
 
     /**

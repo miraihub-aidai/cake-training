@@ -3,10 +3,19 @@ declare(strict_types=1);
 
 namespace App\Domain\UseCase;
 
+use App\Domain\Api\CustomerInterface;
+
 class GetCustomer
 {
-    public function execute()
+    private CustomerInterface $customerService;
+
+    public function __construct(CustomerInterface $customerService)
     {
-        return "Hello World";
+        $this->customerService = $customerService;
+    }
+
+    public function __invoke()
+    {
+        return $this->customerService->get();
     }
 }

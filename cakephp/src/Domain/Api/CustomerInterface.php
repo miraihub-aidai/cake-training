@@ -5,5 +5,5 @@ namespace App\Domain\Api;
 
 interface CustomerInterface
 {
-    public function execute();
+    public function get();
 }

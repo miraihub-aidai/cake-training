@@ -7,7 +7,7 @@ use App\Domain\Api\CustomerInterface;
 
 class CustomerService implements CustomerInterface
 {
-    public function execute()
+    public function get()
     {
         return "Hello World";
     }
