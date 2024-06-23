@@ -25,9 +25,9 @@ class LoggingMiddleware implements MiddlewareInterface
     {
         $method = $request->getMethod();
         $uri = $request->getUri()->getPath();
-        
+
         Log::notice("Request: {$method} {$uri}");
-        
+
         return $handler->handle($request);
     }
 }

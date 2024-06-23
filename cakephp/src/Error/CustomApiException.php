@@ -14,7 +14,7 @@ use Exception;
 abstract class CustomApiException extends Exception implements CustomErrorInterface
 {
     /**
-     * @var array Additional details about the error
+     * @var array<string, mixed> Additional details about the error
      */
     protected array $details;
 
@@ -23,7 +23,7 @@ abstract class CustomApiException extends Exception implements CustomErrorInterf
      *
      * @param string $message The error message
      * @param int $code The HTTP status code
-     * @param array $details Additional details about the error. Defaults to an empty array.
+     * @param array<string, mixed> $details Additional details about the error. Defaults to an empty array.
      */
     public function __construct(string $message, int $code, array $details = [])
     {
@@ -54,9 +54,9 @@ abstract class CustomApiException extends Exception implements CustomErrorInterf
     /**
      * Get the error details
      *
-     * @return array|null The additional error details
+     * @return array<string, mixed> The additional error details
      */
-    public function getErrorDetails(): ?array
+    public function getErrorDetails(): array
     {
         return $this->details;
     }

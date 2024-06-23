@@ -18,5 +18,5 @@ interface CustomerInterface
      * @return mixed The customer data. The exact return type should be specified in the implementing class.
      * @throws \Exception If there's an error retrieving the customer data.
      */
-    public function get();
+    public function get(): mixed;
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Error;
 
 /**
@@ -20,7 +22,7 @@ class GenericError implements CustomErrorInterface
     private string $message;
 
     /**
-     * @var array|null Additional error details
+     * @var array<string, mixed>|null Additional error details
      */
     private ?array $details;
 
@@ -29,7 +31,7 @@ class GenericError implements CustomErrorInterface
      *
      * @param int $code The error code
      * @param string $message The error message
-     * @param array|null $details Additional error details (optional)
+     * @param array<string, mixed>|null $details Additional error details (optional)
      */
     public function __construct(int $code, string $message, ?array $details = null)
     {
@@ -61,7 +63,7 @@ class GenericError implements CustomErrorInterface
     /**
      * Get the error details
      *
-     * @return array|null The error details, or null if not set
+     * @return array<string, mixed>|null The error details, or null if not set
      */
     public function getErrorDetails(): ?array
     {

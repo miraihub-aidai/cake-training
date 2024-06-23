@@ -28,7 +28,7 @@ interface CustomErrorInterface
     /**
      * Get the error details
      *
-     * @return array|null Additional details about the error, or null if no details are available
+     * @return array<string, mixed>|null Additional details about the error, or null if no details are available
      */
     public function getErrorDetails(): ?array;
 }

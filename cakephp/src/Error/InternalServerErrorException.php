@@ -15,7 +15,7 @@ class InternalServerErrorException extends CustomApiException
      * Constructor
      *
      * @param string $message The error message. Defaults to 'Internal Server Error'.
-     * @param array $details Additional details about the error. Defaults to an empty array.
+     * @param array<string, mixed> $details Additional details about the error. Defaults to an empty array.
      */
     public function __construct(string $message = 'Internal Server Error', array $details = [])
     {

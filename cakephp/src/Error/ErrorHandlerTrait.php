@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Error;
 
+use ExampleLibraryCustomer\ApiException;
 use Throwable;
 
 /**
@@ -17,12 +20,12 @@ trait ErrorHandlerTrait
      * This method takes a Throwable object and converts it into an appropriate
      * CustomErrorInterface implementation based on the exception type.
      *
-     * @param Throwable $exception The exception to handle
-     * @return CustomErrorInterface The resulting error object
+     * @param \Throwable $exception The exception to handle
+     * @return \App\Error\CustomErrorInterface The resulting error object
      */
     protected function handleException(Throwable $exception): CustomErrorInterface
     {
-        if ($exception instanceof \ExampleLibraryCustomer\ApiException) {
+        if ($exception instanceof ApiException) {
             return new ApiError(
                 $exception->getCode(),
                 $exception->getMessage(),

@@ -15,27 +15,27 @@ use Cake\Http\Response;
 
 /**
  * CustomerController
- * 
+ *
  * This controller handles API requests related to customers.
  */
 class CustomerController extends AppController
 {
     /**
      * Index method
-     * 
+     *
      * Retrieves a list of customers.
      *
-     * @param GetCustomer $getCustomer The use case for retrieving customers
-     * @return Response The JSON response containing customer data or error information
+     * @param \App\Domain\UseCase\GetCustomer $getCustomer The use case for retrieving customers
+     * @return \Cake\Http\Response The JSON response containing customer data or error information
      */
     public function index(GetCustomer $getCustomer): Response
     {
         try {
             $customers = $getCustomer();
-            
+
             return $this->response
                 ->withType('application/json')
-                ->withStringBody(json_encode($customers))
+                ->withStringBody((string)json_encode($customers))
                 ->withStatus(200);
         } catch (BadRequestException $e) {
             return $this->errorResponse($e, 400);
@@ -55,15 +55,15 @@ class CustomerController extends AppController
     /**
      * Generate an error response
      *
-     * @param CustomApiException $e The exception that was caught
+     * @param \App\Error\CustomApiException $e The exception that was caught
      * @param int $statusCode The HTTP status code to return
-     * @return Response The JSON response containing error information
+     * @return \Cake\Http\Response The JSON response containing error information
      */
     private function errorResponse(CustomApiException $e, int $statusCode): Response
     {
         return $this->response
             ->withType('application/json')
-            ->withStringBody(json_encode([
+            ->withStringBody((string)json_encode([
                 'error' => $e->getErrorMessage(),
                 'details' => $e->getErrorDetails(),
             ]))
@@ -74,45 +74,49 @@ class CustomerController extends AppController
      * View method
      *
      * @param string|null $id Customer id.
-     * @return Response|null|void Renders view
+     * @return \Cake\Http\Response|null Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view(?string $id = null): ?Response
     {
         // Implementation to be added
+        return null;
     }
 
     /**
      * Add method
      *
-     * @return Response|null|void Redirects on successful add, renders view otherwise.
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add(): ?Response
     {
         // Implementation to be added
+        return null;
     }
 
     /**
      * Edit method
      *
      * @param string|null $id Customer id.
-     * @return Response|null|void Redirects on successful edit, renders view otherwise.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(?string $id = null): ?Response
     {
         // Implementation to be added
+        return null;
     }
 
     /**
      * Delete method
      *
      * @param string|null $id Customer id.
-     * @return Response|null Redirects to index.
+     * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(?string $id = null): ?Response
     {
         // Implementation to be added
+        return null;
     }
 }

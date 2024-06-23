@@ -4,22 +4,22 @@ declare(strict_types=1);
 namespace App\ServiceProvider;
 
 use App\Domain\Api\CustomerInterface;
-use App\Service\CustomerService;
 use App\Domain\UseCase\GetCustomer;
 use App\Error\ErrorResolver;
+use App\Service\CustomerService;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 
 /**
  * CustomerServiceProvider
- * 
+ *
  * This service provider is responsible for registering customer-related services
  * and their dependencies in the application's dependency injection container.
  */
 class CustomerServiceProvider extends ServiceProvider
 {
     /**
-     * @var array List of service interfaces and classes provided by this provider
+     * @var array<string> List of service interfaces and classes provided by this provider
      */
     protected array $provides = [
         CustomerInterface::class,
@@ -32,7 +32,7 @@ class CustomerServiceProvider extends ServiceProvider
      *
      * This method configures the dependency injection for customer-related services.
      *
-     * @param ContainerInterface $container The DI container to configure
+     * @param \Cake\Core\ContainerInterface $container The DI container to configure
      * @return void
      */
     public function services(ContainerInterface $container): void

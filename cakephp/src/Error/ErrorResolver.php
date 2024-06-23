@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Error;
 
 use ExampleLibraryCustomer\ApiException;
+use Throwable;
 
 /**
  * ErrorResolver
@@ -19,9 +20,9 @@ class ErrorResolver
      * based on the exception type and properties.
      *
      * @param \Throwable $e The exception to resolve
-     * @return CustomErrorInterface The resolved custom error
+     * @return \App\Error\CustomApiException The resolved custom error
      */
-    public function resolveError(\Throwable $e): CustomErrorInterface
+    public function resolveError(Throwable $e): CustomApiException
     {
         if ($e instanceof ApiException) {
             $statusCode = $e->getCode();

@@ -7,20 +7,20 @@ use App\Domain\Api\CustomerInterface;
 
 /**
  * GetCustomer UseCase
- * 
+ *
  * This class represents the use case for retrieving customers.
  */
 class GetCustomer
 {
     /**
-     * @var CustomerInterface The customer service
+     * @var \App\Domain\Api\CustomerInterface The customer service
      */
     private CustomerInterface $customerService;
 
     /**
      * Constructor
      *
-     * @param CustomerInterface $customerService The customer service implementation
+     * @param \App\Domain\Api\CustomerInterface $customerService The customer service implementation
      */
     public function __construct(CustomerInterface $customerService)
     {
@@ -32,7 +32,7 @@ class GetCustomer
      *
      * Retrieves customers using the customer service.
      *
-     * @return array An array of customer data
+     * @return array<int, array<string, mixed>> An array of customer data
      */
     public function __invoke(): array
     {

@@ -16,7 +16,7 @@ class GenericApiException extends CustomApiException
      *
      * @param string $message The error message
      * @param int $code The HTTP status code associated with this error
-     * @param array $details Additional details about the error. Defaults to an empty array.
+     * @param array<string, mixed> $details Additional details about the error. Defaults to an empty array.
      */
     public function __construct(string $message, int $code, array $details = [])
     {

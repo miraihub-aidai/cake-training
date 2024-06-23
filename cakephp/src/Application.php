@@ -16,12 +16,13 @@ declare(strict_types=1);
  */
 namespace App;
 
+use App\Middleware\LoggingMiddleware;
+// Add this line
+use App\ServiceProvider\CustomerServiceProvider;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Datasource\FactoryLocator;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
-use App\Middleware\LoggingMiddleware; // Add this line
-use App\ServiceProvider\CustomerServiceProvider;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\CsrfProtectionMiddleware;
