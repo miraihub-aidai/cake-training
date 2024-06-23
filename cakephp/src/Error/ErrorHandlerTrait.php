@@ -26,10 +26,12 @@ trait ErrorHandlerTrait
     protected function handleException(Throwable $exception): CustomErrorInterface
     {
         if ($exception instanceof ApiException) {
+            $responseBody = $exception->getResponseBody();
+
             return new ApiError(
                 $exception->getCode(),
                 $exception->getMessage(),
-                $exception->getResponseBody()
+                is_array($responseBody) ? $responseBody : []
             );
         }
 
