@@ -14,7 +14,7 @@ class GetCustomer
         $this->customerService = $customerService;
     }
 
-    public function __invoke()
+    public function __invoke(): array
     {
         return $this->customerService->get();
     }

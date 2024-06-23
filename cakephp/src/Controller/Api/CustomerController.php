@@ -5,8 +5,13 @@ namespace App\Controller\Api;
 
 use App\Controller\AppController;
 use App\Domain\UseCase\GetCustomer;
+use App\Error\BadRequestException;
+use App\Error\CustomApiException;
+use App\Error\ForbiddenException;
+use App\Error\InternalServerErrorException;
+use App\Error\NotFoundException;
+use App\Error\UnauthorizedException;
 use Cake\Http\Response;
-use Exception;
 
 /**
  * Static content controller
@@ -31,12 +36,30 @@ class CustomerController extends AppController
                 ->withType('application/json')
                 ->withStringBody(json_encode($customers))
                 ->withStatus(200);
-        } catch (Exception $e) {
-            return $this->response
-                ->withType('application/json')
-                ->withStringBody(json_encode(['error' => $e->getMessage()]))
-                ->withStatus(500);
+        } catch (BadRequestException $e) {
+            return $this->errorResponse($e, 400);
+        } catch (UnauthorizedException $e) {
+            return $this->errorResponse($e, 401);
+        } catch (ForbiddenException $e) {
+            return $this->errorResponse($e, 403);
+        } catch (NotFoundException $e) {
+            return $this->errorResponse($e, 404);
+        } catch (InternalServerErrorException $e) {
+            return $this->errorResponse($e, 500);
+        } catch (CustomApiException $e) {
+            return $this->errorResponse($e, $e->getCode());
         }
+    }
+
+    private function errorResponse(CustomApiException $e, int $statusCode): Response
+    {
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody(json_encode([
+                'error' => $e->getErrorMessage(),
+                'details' => $e->getErrorDetails(),
+            ]))
+            ->withStatus($statusCode);
     }
 
     /**

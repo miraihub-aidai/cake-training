@@ -4,19 +4,20 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Domain\Api\CustomerInterface;
+use App\Error\ErrorResolver;
 use ExampleLibraryCustomer\Api\DefaultApi;
 use ExampleLibraryCustomer\Configuration;
-use ExampleLibraryCustomer\ApiException;
 use GuzzleHttp\Client;
 
 class CustomerService implements CustomerInterface
 {
     private DefaultApi $apiInstance;
+    private ErrorResolver $errorResolver;
 
-    public function __construct()
+    public function __construct(ErrorResolver $errorResolver)
     {
         $config = new Configuration();
-        $config->setHost('http://host.docker.internal:8081'); // APIのベースURLを設定
+        $config->setHost('http://host.docker.internal:8081');
 
         $clientConfig = [
             'base_uri' => $config->getHost(),
@@ -26,6 +27,7 @@ class CustomerService implements CustomerInterface
         $client = new Client($clientConfig);
 
         $this->apiInstance = new DefaultApi($client, $config);
+        $this->errorResolver = $errorResolver;
     }
 
     public function get(): array
@@ -35,11 +37,7 @@ class CustomerService implements CustomerInterface
             
             return array_map(function (\ExampleLibraryCustomer\Model\Customer $customer) {
                 $createdAt = $customer->getCreatedAt();
-                if ($createdAt instanceof \DateTime) {
-                    $createdAtFormatted = $createdAt->format('Y-m-d\TH:i:s\Z');
-                } else {
-                    $createdAtFormatted = null;
-                }
+                $createdAtFormatted = $createdAt instanceof \DateTime ? $createdAt->format('Y-m-d\TH:i:s\Z') : null;
                 
                 return [
                     'id' => $customer->getId(),
@@ -49,8 +47,8 @@ class CustomerService implements CustomerInterface
                     'createdAt' => $createdAtFormatted,
                 ];
             }, $customers);
-        } catch (ApiException $e) {
-            throw new \RuntimeException('API Exception: ' . $e->getMessage(), 0, $e);
+        } catch (\Throwable $e) {
+            throw $this->errorResolver->resolveError($e);
         }
     }
 }
