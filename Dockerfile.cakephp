@@ -13,7 +13,11 @@ ARG HOST_GID=1000
 
 # ワークディレクトリの所有者を変更
 WORKDIR /var/www/html
-#RUN chown -R cakephp_user:cakephp_group /var/www/html
+
+# ユーザーとグループを作成し、ディレクトリの所有権を変更
+RUN groupadd -g $HOST_GID cakephp_group || true && \
+    useradd -u $HOST_UID -g cakephp_group -s /bin/bash -m cakephp_user || true && \
+    chown -R cakephp_user:cakephp_group /var/www/html
 
 # 必要なパッケージのインストール
 RUN apt update && apt install -y\
@@ -30,10 +34,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # php の設定ファイル変更
 COPY ./php/php.ini /usr/local/etc/php/php.ini
-
-# ユーザーとグループを作成
-RUN groupadd -g $HOST_GID cakephp_group || true && \
-    useradd -u $HOST_UID -g cakephp_group -s /bin/bash -m cakephp_user || true
 
 # SSL証明書の設定
 RUN apt update && apt install -y ssl-cert
@@ -55,8 +55,12 @@ RUN a2enmod rewrite
 # ポート80, 443の公開
 EXPOSE 80 443
 
-# デフォルトユーザーを設定
-#USER cakephp_user
+# ユーザーとグループを作成
+RUN groupadd -g $HOST_GID cakephp_group || true && \
+    useradd -u $HOST_UID -g cakephp_group -s /bin/bash -m cakephp_user || true
+
+# Apacheが適切な権限で実行されるように設定
+RUN sed -i 's/www-data/cakephp_user/g' /etc/apache2/envvars
 
 # コンテナ起動時にApacheを実行
 CMD ["apache2-foreground"]
