@@ -18,7 +18,6 @@ namespace App;
 
 use App\Middleware\LoggingMiddleware;
 // Add this line
-use App\ServiceProvider\CustomerServiceProvider;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Datasource\FactoryLocator;
