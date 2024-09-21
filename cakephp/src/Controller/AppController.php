@@ -27,31 +27,10 @@ class AppController extends Controller
     public function initialize(): void
     {
         parent::initialize();
-
         $this->loadComponent('Flash');
 
         // 認証結果を確認し、サイトのロックを行うために次の行を追加します
-        $this->loadComponent('Authentication.Authentication', [
-            'authorize' => 'Controller',
-            'authenticate' => [
-                'Form' => [
-                    'fields' => [
-                        'username' => 'email',
-                        'password' => 'password',
-                    ],
-                ],
-            ],
-            'loginAction' => [
-                'controller' => 'Users',
-                'action' => 'login',
-            ],
-             // 未認証の場合、直前のページに戻します
-            'unauthorizedRedirect' => $this->referer(),
-        ]);
-
-        // display アクションを許可して、PagesController が引き続き
-        // 動作するようにします。また、読み取り専用のアクションを有効にします。
-        $this->Authentication->allowUnauthenticated(['display', 'view', 'index']);
+        $this->loadComponent('Authentication.Authentication');
 
         /*
          * Enable the following component for recommended CakePHP form protection settings.
@@ -73,6 +52,6 @@ class AppController extends Controller
         parent::beforeFilter($event);
 
         // アプリケーション内のすべてのコントローラーの index と view アクションをパブリックにし、認証チェックをスキップします
-        // $this->Authentication->addUnauthenticatedActions(['index', 'view']);
+        $this->Authentication->addUnauthenticatedActions(['index', 'view']);
     }
 }
