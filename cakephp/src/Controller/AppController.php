@@ -1,22 +1,10 @@
 <?php
 declare(strict_types=1);
 
-/**
- * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- * @link      https://cakephp.org CakePHP(tm) Project
- * @since     0.2.9
- * @license   https://opensource.org/licenses/mit-license.php MIT License
- */
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Event\EventInterface;
 
 /**
  * Application Controller
@@ -25,6 +13,7 @@ use Cake\Controller\Controller;
  * will inherit them.
  *
  * @link https://book.cakephp.org/4/en/controllers.html#the-app-controller
+ * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
  */
 class AppController extends Controller
 {
@@ -32,8 +21,6 @@ class AppController extends Controller
      * Initialization hook method.
      *
      * Use this method to add common initialization code like loading components.
-     *
-     * e.g. `$this->loadComponent('FormProtection');`
      *
      * @return void
      */
@@ -43,10 +30,49 @@ class AppController extends Controller
 
         $this->loadComponent('Flash');
 
+        // 認証結果を確認し、サイトのロックを行うために次の行を追加します
+        $this->loadComponent('Authentication.Authentication', [
+            'authorize' => 'Controller',
+            'authenticate' => [
+                'Form' => [
+                    'fields' => [
+                        'username' => 'email',
+                        'password' => 'password',
+                    ],
+                ],
+            ],
+            'loginAction' => [
+                'controller' => 'Users',
+                'action' => 'login',
+            ],
+             // 未認証の場合、直前のページに戻します
+            'unauthorizedRedirect' => $this->referer(),
+        ]);
+
+        // display アクションを許可して、PagesController が引き続き
+        // 動作するようにします。また、読み取り専用のアクションを有効にします。
+        $this->Authentication->allowUnauthenticated(['display', 'view', 'index']);
+
         /*
          * Enable the following component for recommended CakePHP form protection settings.
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
+    }
+
+    /**
+     * コントローラーのアクションが実行される前に呼び出されるメソッド
+     *
+     * このメソッドは、特定のアクションを認証チェックから除外するために使用されます。
+     *
+     * @param \Cake\Event\EventInterface $event イベントオブジェクト
+     * @return void
+     */
+    public function beforeFilter(EventInterface $event)
+    {
+        parent::beforeFilter($event);
+
+        // アプリケーション内のすべてのコントローラーの index と view アクションをパブリックにし、認証チェックをスキップします
+        // $this->Authentication->addUnauthenticatedActions(['index', 'view']);
     }
 }
