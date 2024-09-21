@@ -3,17 +3,19 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
  * User Entity
  *
  * @property int $id
- * @property string|null $name
- * @property string|null $email
- * @property string|null $password
+ * @property string $email
+ * @property string $password
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
+ *
+ * @property \App\Model\Entity\Article[] $articles
  */
 class User extends Entity
 {
@@ -27,11 +29,11 @@ class User extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'name' => true,
         'email' => true,
         'password' => true,
         'created' => true,
         'modified' => true,
+        'articles' => true,
     ];
 
     /**
@@ -42,4 +44,19 @@ class User extends Entity
     protected array $_hidden = [
         'password',
     ];
+
+    /**
+     * パスワードをハッシュ化するセッターメソッド
+     *
+     * @param string $password 平文のパスワード
+     * @return string|null ハッシュ化されたパスワード、または空文字列の場合はnull
+     */
+    protected function _setPassword(string $password): ?string
+    {
+        if (strlen($password) > 0) {
+            return (new DefaultPasswordHasher())->hash($password);
+        }
+
+        return null;
+    }
 }
