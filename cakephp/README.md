@@ -51,3 +51,12 @@ Other environment agnostic settings can be changed in `config/app.php`.
 The app skeleton uses [Milligram](https://milligram.io/) (v1.3) minimalist CSS
 framework by default. You can, however, replace it with any other library or
 custom styles.
+
+## コンテンツ管理チュートリアルのヒント [*](https://book.cakephp.org/5/ja/tutorials-and-examples.html)
+
+- 文章をよく読んで話の流れを追いながら実装しないと、どこに何を実装するべきかが迷子になりやすい。
+- CakePHP 4/5 でのチュートリアルでは Authorization のページが TODO になっている。
+- CakePHP5 であることによる差異
+  - authentication / authorization が 3.x 以上じゃないと使えない。
+  - Policy を使って Entity に対する権限設定を実装する必要がある。
+  - アソシエーションを利用している articles_tags については、明示的に Entity, Table を作成しなければ、認証/認可時のテーブル参照できずにエラーになる。
