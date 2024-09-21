@@ -14,6 +14,7 @@ use Cake\Event\EventInterface;
  *
  * @link https://book.cakephp.org/4/en/controllers.html#the-app-controller
  * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
+ * @property \Authorization\Controller\Component\AuthorizationComponent $Authorization
  */
 class AppController extends Controller
 {
@@ -31,6 +32,7 @@ class AppController extends Controller
 
         // 認証結果を確認し、サイトのロックを行うために次の行を追加します
         $this->loadComponent('Authentication.Authentication');
+        $this->loadComponent('Authorization.Authorization');
 
         /*
          * Enable the following component for recommended CakePHP form protection settings.
@@ -51,7 +53,10 @@ class AppController extends Controller
     {
         parent::beforeFilter($event);
 
-        // アプリケーション内のすべてのコントローラーの index と view アクションをパブリックにし、認証チェックをスキップします
-        $this->Authentication->addUnauthenticatedActions(['index', 'view']);
+        // 認証されていないアクションを設定
+        $this->Authentication->addUnauthenticatedActions(['index', 'view', 'display']);
+
+        // 認可をスキップするアクションを設定
+        $this->Authorization->skipAuthorization();
     }
 }

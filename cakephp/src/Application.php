@@ -20,8 +20,13 @@ use App\Middleware\LoggingMiddleware;
 // CakePHP コンテンツ管理チュートリアル 追加開始
 use Authentication\AuthenticationService;
 use Authentication\AuthenticationServiceInterface;
-use Authentication\AuthenticationServiceProviderInterface;
+use Authentication\AuthenticationServiceProviderInterface as AuthenticationInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
+use Authorization\AuthorizationService;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\AuthorizationServiceProviderInterface as AuthorizationInterface;
+use Authorization\Middleware\AuthorizationMiddleware;
+use Authorization\Policy\OrmResolver;
 // CakePHP コンテンツ管理チュートリアル 追加終了
 // Add this line
 use Cake\Core\Configure;
@@ -46,7 +51,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @extends \Cake\Http\BaseApplication<\App\Application>
  */
-class Application extends BaseApplication implements AuthenticationServiceProviderInterface
+class Application extends BaseApplication implements AuthenticationInterface, AuthorizationInterface
 {
     /**
      * Load all the application configuration and bootstrap logic.
@@ -94,6 +99,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new RoutingMiddleware($this))
             // RoutingMiddleware の後に認証を追加
             ->add(new AuthenticationMiddleware($this))
+            ->add(new AuthorizationMiddleware($this))
 
             // Parse various types of encoded request bodies so that they are
             // available as array through $request->getData()
@@ -145,6 +151,25 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         ]);
 
         return $authenticationService;
+    }
+
+    /**
+     * 認可サービスを取得する
+     *
+     * この方法は、アプリケーションの認可サービスを設定し、返却します。
+     * OrmResolverを使用して、ORMベースのポリシー解決を設定します。
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request 現在のリクエスト
+     * @return \Authorization\AuthorizationServiceInterface 設定された認可サービス
+     */
+    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
+    {
+        // OrmResolverを作成
+        // これは、データベースのレコードに対するポリシーを解決するために使用されます
+        $resolver = new OrmResolver();
+
+        // AuthorizationServiceを作成し、設定されたresolverで初期化します
+        return new AuthorizationService($resolver);
     }
 
     /**

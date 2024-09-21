@@ -14,13 +14,18 @@ use Cake\Validation\Validator;
  * ArticlesTable
  *
  * 記事テーブルを表すモデルクラス
+ *
+ * @property \App\Model\Table\TagsTable $Tags タグテーブルとの関連
+ * @property \App\Model\Table\UsersTable $Users ユーザーテーブルとの関連
+ * @method \Cake\ORM\SelectQuery findBySlug(string|null $slug)
+ * @package App\Model\Table
  */
 class ArticlesTable extends Table
 {
     /**
      * テーブルの初期化メソッド
      *
-     * @param array $config 設定オプション
+     * @param array<mixed> $config 設定オプション
      * @return void
      */
     public function initialize(array $config): void
@@ -31,8 +36,14 @@ class ArticlesTable extends Table
         // これにより、created と modified フィールドが自動的に管理されます
         $this->addBehavior('Timestamp');
         $this->belongsToMany('Tags', [
+            'foreignKey' => 'article_id',
+            'targetForeignKey' => 'tag_id',
             'joinTable' => 'articles_tags',
             'dependent' => true,
+        ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER',
         ]);
     }
 
@@ -82,7 +93,7 @@ class ArticlesTable extends Table
      * タグに基づいて記事を検索するカスタムファインダーメソッド
      *
      * @param \Cake\ORM\Query\SelectQuery $query クエリインスタンス
-     * @param array $options 検索オプション
+     * @param array<mixed> $options 検索オプション
      * @return \Cake\ORM\Query\SelectQuery 設定済みのクエリインスタンス
      */
     public function findTagged(SelectQuery $query, array $options): SelectQuery
@@ -116,7 +127,7 @@ class ArticlesTable extends Table
      * タグ文字列からタグエンティティの配列を構築するメソッド
      *
      * @param string $tagString カンマ区切りのタグ文字列
-     * @return array タグエンティティの配列
+     * @return array<mixed> タグエンティティの配列
      */
     protected function _buildTags(string $tagString): array
     {

@@ -3,13 +3,52 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Event\EventInterface;
+
 /**
  * ArticlesController
  *
  * 記事の管理を行うコントローラークラス
+ *
+ * @property \App\Model\Table\ArticlesTable $Articles
+ * @property \App\Model\Table\TagsTable $Tags
+ * @property \App\Model\Table\UsersTable $Users
+ * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
+ * @property \Authorization\Controller\Component\AuthorizationComponent $Authorization
+ * @package App\Controller
  */
 class ArticlesController extends AppController
 {
+    /**
+     * Authorization コンポーネントを初期化
+     *
+     * @return void
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+    }
+
+    /**
+     * beforeFilter メソッド
+     *
+     * コントローラーのアクションが実行される前に呼び出されるメソッドです。
+     * 認証および認可の設定を行います。
+     *
+     * @param \Cake\Event\EventInterface $event イベントオブジェクト
+     * @return void
+     */
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+
+        // 認証を必要としないアクションを追加
+        $this->Authentication->addUnauthenticatedActions(['tags']);
+
+        // 認可をスキップするアクションを追加
+        $this->Authorization->skipAuthorization();
+    }
+
     /**
      * 記事一覧を表示するアクション
      *
@@ -31,10 +70,10 @@ class ArticlesController extends AppController
     public function view(?string $slug = null)
     {
         // Update retrieving tags with contain()
-        $article = $this->Articles
-                ->findBySlug($slug)
-                ->contain('Tags')
-                ->firstOrFail();
+        /** @var \Cake\ORM\Query $query */
+        $query = $this->Articles->findBySlug($slug);
+        $article = $query->contain('Tags')->firstOrFail();
+
         $this->set(compact('article'));
     }
 
@@ -46,27 +85,30 @@ class ArticlesController extends AppController
     public function add()
     {
         $article = $this->Articles->newEmptyEntity();
+        $this->Authorization->authorize($article);
+
         if ($this->request->is('post')) {
             $article = $this->Articles->patchEntity($article, $this->request->getData());
 
             // user_id の決め打ちは一時的なもので、あとで認証を構築する際に削除されます。
             // $article->user_id = 1;
             // 変更: セッションから user_id をセット
-            $article->user_id = $this->Auth->user('id');
+            $identity = $this->Authentication->getIdentity();
+            $article->set('user_id', $identity ? $identity->getIdentifier() : null);
 
             if ($this->Articles->save($article)) {
-                $this->Flash->success(__('Your article has been saved.'));
+                $this->Flash->success('Your article has been saved.');
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('Unable to add your article.'));
+            $this->Flash->error('Unable to add your article.');
         }
+
         // タグのリストを取得
         $tags = $this->Articles->Tags->find('list')->all();
 
         // ビューコンテキストに tags をセット
         $this->set('tags', $tags);
-
         $this->set('article', $article);
     }
 
@@ -79,22 +121,28 @@ class ArticlesController extends AppController
      */
     public function edit(string $slug)
     {
-        $article = $this->Articles
-            ->findBySlug($slug)
-            ->contain('Tags') // 関連づけられた Tags を読み込む
-            ->firstOrFail();
+        /** @var \Cake\ORM\Query $query */
+        $query = $this->Articles->findBySlug($slug);
+        $article = $query->contain('Tags')->firstOrFail();
+
+        // 認可チェックを行い、結果を自分で処理
+        if (!$this->Authorization->can($article, 'edit')) {
+            $this->Flash->error('You are not authorized to edit this article.');
+            // 同じ画面に留まる
+            return $this->redirect($this->referer());
+        }
+
         if ($this->request->is(['post', 'put'])) {
             $this->Articles->patchEntity($article, $this->request->getData(), [
-                
                 // 追加: user_id の更新を無効化
-                'accessibleFields' => ['user_id' => false]
+                'accessibleFields' => ['user_id' => false],
             ]);
             if ($this->Articles->save($article)) {
-                $this->Flash->success(__('Your article has been updated.'));
+                $this->Flash->success('Your article has been updated.');
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('Unable to update your article.'));
+            $this->Flash->error('Unable to update your article.');
         }
 
         // タグのリストを取得
@@ -102,7 +150,6 @@ class ArticlesController extends AppController
 
         // ビューコンテキストに tags をセット
         $this->set('tags', $tags);
-
         $this->set('article', $article);
     }
 
@@ -118,12 +165,25 @@ class ArticlesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
 
-        $article = $this->Articles->findBySlug($slug)->firstOrFail();
+        // $article = $this->Articles->findBySlug($slug)->firstOrFail();
+        /** @var \Cake\ORM\Query $query */
+        $query = $this->Articles->findBySlug($slug);
+        $article = $query->contain('Tags')->firstOrFail();
+
+        // 認可チェックを行い、結果を自分で処理
+        if (!$this->Authorization->can($article, 'edit')) {
+            $this->Flash->error('You are not authorized to edit this article.');
+            // 同じ画面に留まる
+            return $this->redirect($this->referer());
+        }
+
         if ($this->Articles->delete($article)) {
-            $this->Flash->success(__('The {0} article has been deleted.', $article->title));
+            $this->Flash->success('The {0} article has been deleted.', $article->title);
 
             return $this->redirect(['action' => 'index']);
         }
+
+        return null;
     }
 
     /**

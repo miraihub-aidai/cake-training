@@ -24,7 +24,7 @@ class Article extends Entity
     /**
      * アクセス可能なプロパティのリスト
      *
-     * @var array
+     * @var array<string, bool> $_accessible
      */
     protected array $_accessible = [
         'title' => true,
@@ -32,6 +32,7 @@ class Article extends Entity
         'published' => true,
         'created' => true,
         'modified' => true,
+        'user_id' => true, // 追加
         'users' => true,
         'tag_string' => true,
     ];

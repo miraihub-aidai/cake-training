@@ -47,11 +47,11 @@ class TagsController extends AppController
         if ($this->request->is('post')) {
             $tag = $this->Tags->patchEntity($tag, $this->request->getData());
             if ($this->Tags->save($tag)) {
-                $this->Flash->success(__('The tag has been saved.'));
+                $this->Flash->success('The tag has been saved.');
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The tag could not be saved. Please, try again.'));
+            $this->Flash->error('The tag could not be saved. Please, try again.');
         }
         $articles = $this->Tags->Articles->find('list', limit: 200)->all();
         $this->set(compact('tag', 'articles'));
@@ -70,11 +70,11 @@ class TagsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $tag = $this->Tags->patchEntity($tag, $this->request->getData());
             if ($this->Tags->save($tag)) {
-                $this->Flash->success(__('The tag has been saved.'));
+                $this->Flash->success('The tag has been saved.');
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The tag could not be saved. Please, try again.'));
+            $this->Flash->error('The tag could not be saved. Please, try again.');
         }
         $articles = $this->Tags->Articles->find('list', limit: 200)->all();
         $this->set(compact('tag', 'articles'));
@@ -92,9 +92,9 @@ class TagsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $tag = $this->Tags->get($id);
         if ($this->Tags->delete($tag)) {
-            $this->Flash->success(__('The tag has been deleted.'));
+            $this->Flash->success('The tag has been deleted.');
         } else {
-            $this->Flash->error(__('The tag could not be deleted. Please, try again.'));
+            $this->Flash->error('The tag could not be deleted. Please, try again.');
         }
 
         return $this->redirect(['action' => 'index']);
