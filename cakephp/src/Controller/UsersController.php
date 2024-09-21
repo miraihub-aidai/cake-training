@@ -15,12 +15,6 @@ class UsersController extends AppController
     // コンポーネントをプロパティとして定義
     protected $components = ['Authentication', 'Flash'];
 
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->Authentication->addUnauthenticatedActions(['login', 'add']);
-    }
-
     /**
      * コントローラーのアクションが実行される前に呼び出されるメソッド
      *
