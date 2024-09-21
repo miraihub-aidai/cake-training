@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Event\EventInterface;
+use Cake\Http\Response;
 
 /**
  * Users Controller
@@ -12,8 +13,14 @@ use Cake\Event\EventInterface;
  */
 class UsersController extends AppController
 {
-    // コンポーネントをプロパティとして定義
-    protected $components = ['Authentication', 'Flash'];
+    /**
+     * コンポーネントのロード
+     *
+     * 認証およびフラッシュメッセージのコンポーネントをロードします。
+     *
+     * @var array<string>
+     */
+    protected array $components = ['Authentication', 'Flash'];
 
     /**
      * コントローラーのアクションが実行される前に呼び出されるメソッド
@@ -36,7 +43,7 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null ログイン成功時はリダイレクト、それ以外の場合はnull
      */
-    public function login()
+    public function login(): ?Response
     {
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
@@ -53,9 +60,16 @@ class UsersController extends AppController
         }
 
         // ユーザーが submit 後、認証失敗した場合は、エラーを表示します
-        if ($this->request->is('post') && !$result->isValid()) {
-            $this->Flash->error(__('Invalid username or password'));
+        if ($this->request->is('post')) {
+            if ($result && $result->isValid()) {
+                $target = $this->Authentication->getLoginRedirect() ?? '/users/login';
+
+                return $this->redirect($target);
+            }
+            $this->Flash->error('Invalid username or password');
         }
+
+        return null;
     }
 
     /**
@@ -66,7 +80,7 @@ class UsersController extends AppController
      *
      * @return \Cake\Http\Response|null ログアウト成功時はリダイレクト、それ以外の場合はnull
      */
-    public function logout()
+    public function logout(): ?Response
     {
         $result = $this->Authentication->getResult();
         // POST, GET を問わず、ユーザーがログインしている場合はリダイレクトします
@@ -75,6 +89,8 @@ class UsersController extends AppController
 
             return $this->redirect(['controller' => 'Users', 'action' => 'login']);
         }
+
+        return null;
     }
 
     /**
@@ -114,11 +130,11 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+                $this->Flash->success('The user has been saved.');
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->error('The user could not be saved. Please, try again.');
         }
         $this->set(compact('user'));
     }
@@ -136,11 +152,11 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+                $this->Flash->success('The user has been saved.');
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->error('The user could not be saved. Please, try again.');
         }
         $this->set(compact('user'));
     }
@@ -157,9 +173,9 @@ class UsersController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
+            $this->Flash->success('The user has been deleted.');
         } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            $this->Flash->error('The user could not be deleted. Please, try again.');
         }
 
         return $this->redirect(['action' => 'index']);
