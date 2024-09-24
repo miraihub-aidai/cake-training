@@ -2,8 +2,8 @@
 COMPOSE_FILE := docker-compose.yml
 
 # ホストのUIDとGIDを取得
-HOST_UID ?= $(shell id -u)
-HOST_GID ?= $(shell id -g)
+HOST_UID = 1000
+HOST_GID = 1000
 
 # ユーザー名を設定
 DOCKER_USER ?= cakephp_user
