@@ -55,6 +55,7 @@ custom styles.
 ## コンテンツ管理チュートリアルのヒント [*](https://book.cakephp.org/5/ja/tutorials-and-examples.html)
 
 - 文章をよく読んで話の流れを追いながら実装しないと、どこに何を実装するべきかが迷子になりやすい。
+- DBのテーブル作成のコマンドが MySQL 用になっているので PostgreSQL 用に変換してSQL投入が必要。
 - CakePHP 4/5 でのチュートリアルでは Authorization のページが TODO になっている。
 - CakePHP5 であることによる差異
   - authentication / authorization が 3.x 以上じゃないと使えない。
