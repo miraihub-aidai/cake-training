@@ -186,6 +186,30 @@ class ArticlesController extends AppController
         return null;
     }
 
+    //検索    
+    public function search(){
+        // 検索条件を取得する
+        $search = $this->request->getQuery('title');
+
+        // 検索条件が存在する場合、クエリをフィルターする
+        $query = $this->Articles->find(); 
+        // モデルのクエリを作成
+        if (!empty($search)) {
+            $query->where(['Articles.title LIKE' => '%' . $search . '%']);
+            // 結果をページネーションする条件で検索している
+            $articles = $this->paginate($query);
+             // 結果をビューに渡す      
+             $this->set(compact('articles'));   
+               // // // タグを取得
+                //  $tags = $this->Articles->Tags->find('list')->all();
+     
+                //  // // 結果をビューに渡す
+                //  $this->set(compact('articles', 'tags')); 
+            
+    }
+                $this->set('search', $search);
+}
+
     /**
      * 指定されたタグを持つ記事を表示するアクション
      *
@@ -210,3 +234,5 @@ class ArticlesController extends AppController
         ]);
     }
 }
+
+
