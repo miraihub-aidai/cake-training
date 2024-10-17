@@ -209,4 +209,29 @@ class ArticlesController extends AppController
             'tags' => $tags,
         ]);
     }
+
+
+    public function search()
+    {
+        //$query = $this->Articles->find(); //クエリを初期化※できればこれも実行させないべき
+
+        $this->set('keyword', $keyword ?? ''); 
+
+        $keyword = $this->request->getQuery('keyword');
+        
+        // 検索フォームからキーワードが送信された場合
+        if ($keyword !== null) {
+
+            $query = $this->Articles->find(); //クエリを初期化
+            
+            // タイトルにキーワードを含む記事を検索
+            $query->where(['Articles.title LIKE' => $keyword]);
+        
+
+        // 検索結果を取得し、ビューに渡す
+        $articles = $this->paginate($query); 
+        $this->set(compact('articles', 'keyword')); 
+        }
+    }
+
 }

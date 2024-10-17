@@ -99,4 +99,18 @@ class TagsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function search()
+    {
+        $query = $this->Tags->find();
+
+        if($this->request->is('post')){
+            $keyword = $this->request->getData('keyword');
+            $query->where(['Tags.title' => $keyword]);
+        }
+
+        $tags = $this->paginate($query);
+        $this->set(compact('tags','keyword'));
+
+    }
 }
