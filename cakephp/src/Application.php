@@ -28,6 +28,17 @@ use Authorization\AuthorizationServiceProviderInterface as AuthorizationInterfac
 use Authorization\Middleware\AuthorizationMiddleware;
 use Authorization\Policy\OrmResolver;
 // CakePHP コンテンツ管理チュートリアル 追加終了
+// CakePHP コンテンツ管理チュートリアル 追加開始
+use Authentication\AuthenticationService;
+use Authentication\AuthenticationServiceInterface;
+use Authentication\AuthenticationServiceProviderInterface as AuthenticationInterface;
+use Authentication\Middleware\AuthenticationMiddleware;
+use Authorization\AuthorizationService;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\AuthorizationServiceProviderInterface as AuthorizationInterface;
+use Authorization\Middleware\AuthorizationMiddleware;
+use Authorization\Policy\OrmResolver;
+// CakePHP コンテンツ管理チュートリアル 追加終了
 // Add this line
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
@@ -42,6 +53,8 @@ use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
 use Psr\Http\Message\ServerRequestInterface;
+use Cake\Routing\Router;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Application setup class.
@@ -51,6 +64,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @extends \Cake\Http\BaseApplication<\App\Application>
  */
+class Application extends BaseApplication implements AuthenticationInterface, AuthorizationInterface
 class Application extends BaseApplication implements AuthenticationInterface, AuthorizationInterface
 {
     /**
@@ -101,6 +115,9 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
             // RoutingMiddleware の後に認証を追加
             ->add(new AuthenticationMiddleware($this))
             ->add(new AuthorizationMiddleware($this))
+            // RoutingMiddleware の後に認証を追加
+            ->add(new AuthenticationMiddleware($this))
+            ->add(new AuthorizationMiddleware($this))
 
             // Parse various types of encoded request bodies so that they are
             // available as array through $request->getData()
@@ -116,6 +133,61 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
             $middlewareQueue->add(new LoggingMiddleware());
 
         return $middlewareQueue;
+    }
+
+    /**
+     * 認証サービスを設定し、返却するメソッド
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request サーバーリクエストインターフェース
+     * @return \Authentication\AuthenticationServiceInterface 設定された認証サービス
+     */
+    public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
+    {
+        $authenticationService = new AuthenticationService([
+            'unauthenticatedRedirect' => Router::url('/users/login'),
+            'queryParam' => 'redirect',
+        ]);
+
+        // identifiers を読み込み、email と password のフィールドを確認します
+        $authenticationService->loadIdentifier('Authentication.Password', [
+            'fields' => [
+                'username' => 'email',
+                'password' => 'password',
+            ],
+        ]);
+
+        // authenticatorsをロードしたら、最初にセッションが必要です
+        $authenticationService->loadAuthenticator('Authentication.Session');
+
+        // 入力した email と password をチェックする為のフォームデータを設定します
+        $authenticationService->loadAuthenticator('Authentication.Form', [
+            'fields' => [
+                'username' => 'email',
+                'password' => 'password',
+            ],
+            'loginUrl' => Router::url('/users/login'),
+        ]);
+
+        return $authenticationService;
+    }
+
+    /**
+     * 認可サービスを取得する
+     *
+     * この方法は、アプリケーションの認可サービスを設定し、返却します。
+     * OrmResolverを使用して、ORMベースのポリシー解決を設定します。
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request 現在のリクエスト
+     * @return \Authorization\AuthorizationServiceInterface 設定された認可サービス
+     */
+    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
+    {
+        // OrmResolverを作成
+        // これは、データベースのレコードに対するポリシーを解決するために使用されます
+        $resolver = new OrmResolver();
+
+        // AuthorizationServiceを作成し、設定されたresolverで初期化します
+        return new AuthorizationService($resolver);
     }
 
     /**
