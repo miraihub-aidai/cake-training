@@ -218,6 +218,7 @@ class ArticlesController extends AppController
         $this->set('keyword', $keyword ?? ''); 
 
         $keyword = $this->request->getQuery('keyword');
+        
         // 検索フォームからキーワードが送信された場合
         if ($keyword !== null) {
 
