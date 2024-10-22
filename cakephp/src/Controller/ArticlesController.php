@@ -225,12 +225,11 @@ class ArticlesController extends AppController
             $query = $this->Articles->find(); //クエリを初期化
             
             // タイトルにキーワードを含む記事を検索
-            $query->where(['Articles.title LIKE' => $keyword]);
+            $query->where(['Articles.title LIKE' => "%$keyword%"]);
         
-
-        // 検索結果を取得し、ビューに渡す
-        $articles = $this->paginate($query); 
-        $this->set(compact('articles', 'keyword')); 
+            // 検索結果を取得し、ビューに渡す
+            $articles = $this->paginate($query); 
+            $this->set(compact('articles', 'keyword')); 
         }
     }
 
