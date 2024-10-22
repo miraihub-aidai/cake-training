@@ -218,7 +218,14 @@ class ArticlesController extends AppController
         $this->set('keyword', $keyword ?? ''); 
 
         $keyword = $this->request->getQuery('keyword');
-        
+
+        $query = $this->Articles->find()
+            ->where(function ($exp, $q) use ($keyword) {
+                return $exp->or([
+                    $q->newExpr()->like('Articles.title', "%$keyword%"),
+                    $q->newExpr()->like('Articles.description', "%$keyword%")
+                ]);
+            });
         // 検索フォームからキーワードが送信された場合
         if ($keyword !== null) {
 
