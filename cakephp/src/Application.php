@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
- 
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace App;
- 
+
 use App\Middleware\LoggingMiddleware;
 // CakePHP コンテンツ管理チュートリアル 追加開始
 use Authentication\AuthenticationService;
@@ -42,7 +42,7 @@ use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
 use Psr\Http\Message\ServerRequestInterface;
- 
+
 /**
  * Application setup class.
  *
@@ -62,19 +62,19 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
     {
         // Call parent to load bootstrap from files.
         parent::bootstrap();
- 
+
         if (PHP_SAPI !== 'cli') {
             FactoryLocator::add(
                 'Table',
                 (new TableLocator())->allowFallbackClass(false)
             );
         }
- 
+
         // チュートリアルの記載で不足している追加
         $this->addPlugin('Authorization');
         $this->addPlugin('Authentication');
     }
- 
+
     /**
      * Setup the middleware queue your application will use.
      *
@@ -87,12 +87,12 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
             // Catch any exceptions in the lower layers,
             // and make an error page/response
             ->add(new ErrorHandlerMiddleware(Configure::read('Error'), $this))
- 
+
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(new AssetMiddleware([
                 'cacheTime' => Configure::read('Asset.cacheTime'),
             ]))
- 
+
             // Add routing middleware.
             // If you have a large number of routes connected, turning on routes
             // caching in production could improve performance.
@@ -101,23 +101,23 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
             // RoutingMiddleware の後に認証を追加
             ->add(new AuthenticationMiddleware($this))
             ->add(new AuthorizationMiddleware($this))
- 
+
             // Parse various types of encoded request bodies so that they are
             // available as array through $request->getData()
             // https://book.cakephp.org/4/en/controllers/middleware.html#body-parser-middleware
             ->add(new BodyParserMiddleware())
- 
+
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/4/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
             ->add(new CsrfProtectionMiddleware([
                 'httponly' => true,
             ]));
- 
+
             $middlewareQueue->add(new LoggingMiddleware());
- 
+
         return $middlewareQueue;
     }
- 
+
     /**
      * 認証サービスを設定し、返却するメソッド
      *
@@ -130,7 +130,7 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
             'unauthenticatedRedirect' => Router::url('/users/login'),
             'queryParam' => 'redirect',
         ]);
- 
+
         // identifiers を読み込み、email と password のフィールドを確認します
         $authenticationService->loadIdentifier('Authentication.Password', [
             'fields' => [
@@ -138,10 +138,10 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
                 'password' => 'password',
             ],
         ]);
- 
+
         // authenticatorsをロードしたら、最初にセッションが必要です
         $authenticationService->loadAuthenticator('Authentication.Session');
- 
+
         // 入力した email と password をチェックする為のフォームデータを設定します
         $authenticationService->loadAuthenticator('Authentication.Form', [
             'fields' => [
@@ -150,10 +150,10 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
             ],
             'loginUrl' => Router::url('/users/login'),
         ]);
- 
+
         return $authenticationService;
     }
- 
+
     /**
      * 認可サービスを取得する
      *
@@ -168,11 +168,11 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
         // OrmResolverを作成
         // これは、データベースのレコードに対するポリシーを解決するために使用されます
         $resolver = new OrmResolver();
- 
+
         // AuthorizationServiceを作成し、設定されたresolverで初期化します
         return new AuthorizationService($resolver);
     }
- 
+
     /**
      * Register application container services.
      *

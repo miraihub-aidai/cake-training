@@ -2,11 +2,9 @@
 <!-- 検索フォーム -->
 <?php 
     echo $this->Form->create(null, ['action' =>'search', 'type' => 'get']);
-    echo $this->Form->control('title',[[
-                'type' => 'text', 
-                'width' => '10px',
-            
-    ],
+    echo $this->Form->control('title', [
+        'type' => 'text',
+        'style' => 'width: 200px;'  // または
     ]);
     echo $this->Form->button(__('検索'),[ 'type' => 'submit']);
     echo $this->Form->end(); 
