@@ -195,7 +195,6 @@ return [
         'editor' => 'phpstorm',
     ],
 
-
     /*
      * Email configuration.
      *

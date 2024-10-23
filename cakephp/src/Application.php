@@ -131,7 +131,7 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
             'queryParam' => 'redirect',
         ]);
 
-        // identifiers を読み込み、email と password のフィールドを確認します
+        // identifiersでUsersテーブルを読み込み、email と password のフィールドを確認します
         $authenticationService->loadIdentifier('Authentication.Password', [
             'fields' => [
                 'username' => 'email',

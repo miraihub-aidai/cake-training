@@ -210,20 +210,22 @@ class ArticlesController extends AppController
         ]);
     }
 
-
+    /**
+     * 記事を検索するアクション
+     *
+     * @return void
+     */
     public function search()
     {
-        //$query = $this->Articles->find(); //クエリを初期化※できればこれも実行させないべき
-
-        $this->set('keyword', $keyword ?? ''); 
 
         $keyword = $this->request->getQuery('keyword');
-        
+
+        $this->set('keyword', $keyword ?? '');
+
         // 検索フォームからキーワードが送信された場合
         if ($keyword !== null) {
-
             $query = $this->Articles->find(); //クエリを初期化
-            
+
             // タイトルにキーワードを含む記事を検索
             $query->where(['Articles.title LIKE' => "%$keyword%"]);
         
@@ -232,5 +234,4 @@ class ArticlesController extends AppController
             $this->set(compact('articles', 'keyword')); 
         }
     }
-
 }

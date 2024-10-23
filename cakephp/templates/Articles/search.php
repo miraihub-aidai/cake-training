@@ -6,7 +6,12 @@
     echo $this->Form->end();
 ?>
 
-<?php if (!empty($articles) && $articles->count() > 0): ?>
+
+<?php if (is_null($keyword) || $keyword == ''): ?>
+    <!--<p>記事のタイトルを入力してください。</p>-->
+<?php elseif(empty($articles) && $articles->count() > 0): ?>    
+    <p>該当する記事は見つかりませんでした。</p>
+<?php else : ?>
     <h2>検索結果</h2>
     <table>
         <tr>
@@ -33,10 +38,5 @@
                 </td>
             </tr>
         <?php endforeach; ?>
-
     </table>
-<?php elseif (is_null($keyword) || $keyword == ''): ?>
-    <!--<p>記事のタイトルを入力してください。</p>-->
-<?php else: ?>    
-    <p>該当する記事は見つかりませんでした。</p>
 <?php endif; ?>
