@@ -2,8 +2,8 @@
 COMPOSE_FILE := docker-compose.yml
 
 # ホストのUIDとGIDを取得
-HOST_UID = 1000
-HOST_GID = 1000
+HOST_UID ?= $(shell id -u)
+HOST_GID ?= $(shell id -g)
 
 # ユーザー名を設定
 DOCKER_USER ?= cakephp_user
@@ -50,7 +50,7 @@ ps:
 # webコンテナ内でbashを実行
 .PHONY: bash
 bash:
-	docker compose -f $(COMPOSE_FILE) exec -e HOME=/home/cakephp_user --user $(HOST_UID):$(HOST_GID) web bash -l
+	docker compose -f $(COMPOSE_FILE) exec -e HOME=/home/cakephp_user -u cakephp_user web bash -l
 
 # データベースコンテナ内でpsqlを実行
 .PHONY: psql
@@ -61,11 +61,6 @@ psql:
 .PHONY: migrate
 migrate:
 	docker compose -f $(COMPOSE_FILE) exec -e USER=$(DOCKER_USER) --user $(HOST_UID):$(HOST_GID) web bin/cake migrations migrate
-
-# CakePHPのシェルを実行
-#.PHONY: cake-shell
-#cake-shell:
-#	docker compose -f $(COMPOSE_FILE) exec web bin/cake console
 
 # Composerの更新
 .PHONY: composer-update
