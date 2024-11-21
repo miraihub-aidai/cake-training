@@ -72,6 +72,7 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
 
         // チュートリアルの記載で不足している追加
         $this->addPlugin('Authorization');
+        $this->addPlugin('Authentication');
     }
 
     /**

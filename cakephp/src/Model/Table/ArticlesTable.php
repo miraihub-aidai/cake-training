@@ -161,4 +161,32 @@ class ArticlesTable extends Table
 
         return $out;
     }
+
+    // //付け加えた記事を探すためのテーブル
+    // public function findTitlegged(SelectQuery $query, array $options): SelectQuery
+    // {
+    //     $columns = [
+    //         'Articles.id', 'Articles.user_id', 'Articles.title',
+    //         'Articles.body', 'Articles.published', 'Articles.created',
+    //         'Articles.slug',
+    //     ];
+
+    //     $query = $query
+    //         ->select($columns)
+    //         ->distinct($columns);
+
+    //     if (empty($options['title'])) {
+    //         // タイトルが指定されていない場合は、タイトルのない記事を検索します。
+    //         $query->leftJoinWith('title')
+    //             ->where(['Tags.title IS' => null]);
+    //     } else {
+    //         // 提供されたタグが1つ以上ある記事を検索します。
+    //         $query->innerJoinWith('title')
+    //             ->where(['Tags.title IN' => $options['title']]);
+    //     }
+
+    //     // Deprecation Warning: The group() method is deprecated. Use groupBy() instead.
+    //     // return $query->group(['Articles.id']);
+    //     return $query->groupBy(['Articles.id']);
+    // }
 }
