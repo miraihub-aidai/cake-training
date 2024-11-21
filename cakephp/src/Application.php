@@ -72,6 +72,7 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
 
         // チュートリアルの記載で不足している追加
         $this->addPlugin('Authorization');
+        $this->addPlugin('Authentication');
     }
 
     /**
@@ -130,7 +131,7 @@ class Application extends BaseApplication implements AuthenticationInterface, Au
             'queryParam' => 'redirect',
         ]);
 
-        // identifiers を読み込み、email と password のフィールドを確認します
+        // identifiersでUsersテーブルを読み込み、email と password のフィールドを確認します
         $authenticationService->loadIdentifier('Authentication.Password', [
             'fields' => [
                 'username' => 'email',

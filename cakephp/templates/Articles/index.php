@@ -1,5 +1,6 @@
 <h1>記事一覧</h1>
-<?= $this->Html->link('記事の追加', ['action' => 'add']) ?>
+<?= $this->Html->link('記事の追加', ['action' => 'add'],['style' => 'margin-right: 20px;']) ?>
+<?= $this->Html->link('記事の検索', ['action' => 'search']) ?>
 <table>
     <tr>
         <th>タイトル</th>
