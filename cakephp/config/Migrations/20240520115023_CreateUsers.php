@@ -13,6 +13,7 @@ class CreateUsers extends AbstractMigration
      * https://book.cakephp.org/phinx/0/en/migrations.html#the-change-method
      * @return void
      */
+    /*
     public function change(): void
     {
         $table = $this->table('users');
@@ -23,4 +24,30 @@ class CreateUsers extends AbstractMigration
             ->addColumn('modified', 'datetime');
         $table->create();
     }
+    */
+
+    /**
+     * up
+     * テーブル作成
+     */
+    public function up(): void
+    {
+        $table = $this->table('users');
+        $table->addColumn('email', 'string', ['limit' => 255])
+            ->addColumn('password', 'string', ['limit' => 255])
+            ->addColumn('created', 'datetime', ['limit' => 255, 'null' => true])
+            ->addColumn('modified', 'datetime', ['limit' => 255, 'null' => true]);
+        $table->create();
+    }
+
+    /**
+     * down
+     * テーブル削除
+     */
+    public function down(): void
+    {
+        $table = $this->table('users');
+        $table->drop()->save();
+    }
 }
+

@@ -41,6 +41,7 @@ class AppController extends Controller
     {
         parent::initialize();
 
+        //$this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
 
         /*
@@ -48,5 +49,15 @@ class AppController extends Controller
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
+
+        // 認証結果を確認し、サイトのロックを行うために次の行を追加します
+        $this->loadComponent('Authentication.Authentication');
+    }
+
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        // アプリケーション内のすべてのコントローラーの index と view アクションをパブリックにし、認証チェックをスキップします
+        $this->Authentication->addUnauthenticatedActions(['index', 'view']);
     }
 }
